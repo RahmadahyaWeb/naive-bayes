@@ -78,7 +78,9 @@ Akses aplikasi melalui browser:
 Untuk menghentikan container:
 
     ./vendor/bin/sail down
-    atau
+    
+atau
+    
     ./vendor/bin/sail stop
 
 ------------------------------------------------------------
