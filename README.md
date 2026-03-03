@@ -11,11 +11,17 @@ Keduanya dijalankan menggunakan Docker.
 STRUKTUR PROJECT
 ------------------------------------------------------------
 
-naive-bayes/
-│
-├── task-management/        # Laravel Web App
-├── task-management-api/    # Python ML API
+```
+naive-bayes
+├── task-management/
+├── task-management-api/
 └── README.md
+```
+
+### Keterangan
+
+- `task-management/` → Laravel Web Application  
+- `task-management-api/` → Python Machine Learning API  
 
 ------------------------------------------------------------
 1. CLONE REPOSITORY
@@ -98,7 +104,9 @@ Build dan jalankan container:
 Untuk menghentikan service:
 
     docker compose down
-    atau
+    
+atau
+   
     docker compose stop
 
 API akan berjalan di http://localhost:8000/api/sort-tasks
