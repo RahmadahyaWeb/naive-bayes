@@ -39,6 +39,11 @@
                     :current="request()->routeIs('tasks*')" wire:navigate>
                     {{ __('Tasks') }}
                 </flux:sidebar.item>
+
+                  <flux:sidebar.item icon="document-arrow-down" :href="route('reports')"
+                    :current="request()->routeIs('reports*')" wire:navigate>
+                    {{ __('Reports') }}
+                </flux:sidebar.item>
             </flux:sidebar.group>
         </flux:sidebar.nav>
 
