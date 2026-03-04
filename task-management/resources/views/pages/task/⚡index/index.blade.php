@@ -66,10 +66,25 @@
                                     </span>
                                 </flux:table.cell>
 
-                                 <flux:table.cell>
-                                    <flux:button size="sm" href="{{ route('tasks.detail', $project) }}">
-                                        Details
+                                <flux:table.cell>
+                                    <flux:button size="sm" wire:click="edit({{ $project->id }})">
+                                        Edit
                                     </flux:button>
+
+                                    <flux:dropdown>
+                                        <flux:button size="sm" icon:trailing="chevron-down">
+                                            More
+                                        </flux:button>
+
+                                        <flux:menu>
+                                            <flux:menu.item href="{{ route('tasks.detail', $project) }}">Details
+                                            </flux:menu.item>
+                                            <flux:menu.item wire:click="delete({{ $project->id }})"
+                                                variant="danger">
+                                                Delete
+                                            </flux:menu.item>
+                                        </flux:menu>
+                                    </flux:dropdown>
                                 </flux:table.cell>
 
                             </flux:table.row>
@@ -110,13 +125,13 @@
         </div>
     </div>
 
-    <flux:modal name="add-project" class="w-full sm:w-96 md:w-225 lg:w-250 xl:w-300">
+    <flux:modal name="add-project" class="w-full sm:w-96 md:w-225 lg:w-250 xl:w-300" @close="resetForm()">
         <div class="space-y-6">
 
             {{-- HEADER --}}
             <div>
-                <flux:heading size="lg">Add New Project</flux:heading>
-                <flux:text class="mt-2">Add your new Project</flux:text>
+                <flux:heading size="lg">{{ $editingProjectId ? 'Update' : 'Add New' }} Project</flux:heading>
+                <flux:text class="mt-2">{{ $editingProjectId ? 'Update' : 'Add' }} your {{ $editingProjectId ? 'existing' : 'new' }}  Project</flux:text>
             </div>
 
             {{-- FORM --}}
@@ -153,11 +168,36 @@
                 {{-- ACTION --}}
                 <div class="col-span-2 flex items-center justify-end mt-4">
                     <flux:button type="submit" variant="primary">
-                        Save Task
+                        {{ $editingProjectId ? 'Update Project' : 'Save Project' }}
                     </flux:button>
                 </div>
 
             </form>
+        </div>
+    </flux:modal>
+
+
+    <flux:modal name="delete-project" class="min-w-88">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Delete project?</flux:heading>
+
+                <flux:text class="mt-2">
+                    You're about to delete this project.<br>
+                    This action cannot be reversed.
+                </flux:text>
+            </div>
+
+            <div class="flex gap-2">
+                <flux:spacer />
+
+                <flux:modal.close>
+                    <flux:button variant="ghost">Cancel</flux:button>
+                </flux:modal.close>
+
+                <flux:button wire:click="confirmDelete" variant="danger">Delete task
+                </flux:button>
+            </div>
         </div>
     </flux:modal>
 

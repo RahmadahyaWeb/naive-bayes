@@ -14,7 +14,7 @@ class Task extends Model
         'story_point_id',
         'estimated_hour_id',
         'due_date',
-        'project_id'
+        'project_id',
     ];
 
     public function user()
@@ -35,5 +35,10 @@ class Task extends Model
     public function estimated_hour()
     {
         return $this->belongsTo(EstimatedHour::class, 'estimated_hour_id');
+    }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class, 'project_id');
     }
 }

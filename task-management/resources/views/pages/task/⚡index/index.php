@@ -18,16 +18,14 @@ new class extends Component
 
     public $end_date;
 
+    public $editingProjectId = null; // 1️⃣ ID project yang sedang diedit
+
     #[Computed()]
     public function projects()
     {
-        $projects = Project::with([
-            'user',
-        ])
+        return Project::with('user')
             ->where('user_id', Auth::id())
             ->paginate();
-
-        return $projects;
     }
 
     protected $rules = [
@@ -41,37 +39,73 @@ new class extends Component
         'name.required' => 'Please enter a name for the task.',
         'name.string' => 'The name must be a valid text.',
         'name.max' => 'The name cannot exceed 255 characters.',
-
         'description.required' => 'Please provide a description for the task.',
         'description.string' => 'The description must be valid text.',
-
         'start_date.required' => 'Please select a start date.',
         'start_date.date' => 'The start date is not a valid date.',
-
         'end_date.required' => 'Please select a end date.',
         'end_date.date' => 'The end date is not a valid date.',
     ];
 
-       public function save()
+    // 2️⃣ EDIT METHOD
+    public function edit($id)
     {
-        // 1️⃣ VALIDATE INPUT
+        $project = Project::findOrFail($id);
+
+        $this->editingProjectId = $project->id;
+        $this->name = $project->name;
+        $this->description = $project->description;
+        $this->start_date = $project->start_date;
+        $this->end_date = $project->end_date;
+
+        $this->modal('add-project')->show();
+    }
+
+    // 3️⃣ SAVE METHOD (CREATE OR UPDATE)
+    public function save()
+    {
         $validated = $this->validate();
 
-        // 2️⃣ CREATE PROJECT
-        $project = Project::create([
-            'name' => $validated['name'],
-            'description' => $validated['description'],
-            'start_date' => $validated['start_date'],
-            'end_date' => $validated['end_date'],
-            'user_id' => Auth::id()
-        ]);
+        if ($this->editingProjectId) {
+            // UPDATE
+            $project = Project::findOrFail($this->editingProjectId);
+            $project->update($validated);
+        } else {
+            // CREATE
+            Project::create([
+                ...$validated,
+                'user_id' => Auth::id(),
+            ]);
+        }
 
-        // 3️⃣ RESET FORM
-        $this->reset([
-            'name',
-            'description',
-            'start_date',
-            'end_date',
-        ]);
+        $this->resetForm();
+        $this->modal('add-project')->close();
+    }
+
+    public $deletingProjectId = null;
+
+    // 1️⃣ OPEN DELETE MODAL
+    public function delete($id)
+    {
+        $this->deletingProjectId = $id;
+        $this->modal('delete-project')->show();
+    }
+
+    // 2️⃣ CONFIRM DELETE
+    public function confirmDelete()
+    {
+        if ($this->deletingProjectId) {
+            Project::where('id', $this->deletingProjectId)
+                ->where('user_id', Auth::id())
+                ->delete();
+        }
+
+        $this->deletingProjectId = null;
+        $this->modal('delete-project')->close();
+    }
+
+    public function resetForm()
+    {
+        $this->reset(['name', 'description', 'start_date', 'end_date', 'editingProjectId']);
     }
 };
