@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome')->name('home');
+Route::redirect('/', '/dashboard')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('dashboard', 'pages::dashboard')->name('dashboard');
@@ -13,6 +13,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('tasks', 'pages::task.index')->name('tasks.index');
     Route::livewire('tasks/{project}', 'pages::task.detail')->name('tasks.detail');
     Route::livewire('reports', 'pages::report')->name('reports');
+    Route::livewire('documentation', 'pages::documentation')->name('documentation');
 });
 
 require __DIR__.'/settings.php';

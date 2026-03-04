@@ -40,7 +40,7 @@
                     {{ __('Tasks') }}
                 </flux:sidebar.item>
 
-                  <flux:sidebar.item icon="document-arrow-down" :href="route('reports')"
+                <flux:sidebar.item icon="document-arrow-down" :href="route('reports')"
                     :current="request()->routeIs('reports*')" wire:navigate>
                     {{ __('Reports') }}
                 </flux:sidebar.item>
@@ -50,8 +50,7 @@
         <flux:spacer />
 
         <flux:sidebar.nav>
-            <flux:sidebar.item icon="book-open-text" href=""
-                target="_blank">
+            <flux:sidebar.item icon="book-open-text" :href="route('documentation')" wire:navigate>
                 {{ __('Documentation') }}
             </flux:sidebar.item>
         </flux:sidebar.nav>
